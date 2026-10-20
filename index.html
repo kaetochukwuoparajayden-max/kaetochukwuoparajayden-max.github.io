@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KaetoHub — Games, Google Search & AI</title>
+<meta name="description" content="KaetoHub is a clean web hub for games, Google search, and an AI assistant.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#080b14">
+<meta property="og:title" content="KaetoHub — Games, Google Search & AI">
+<meta property="og:description" content="Games, Google search, and AI in one place.">
+<meta property="og:type" content="website">
+<style>
+:root{--bg:#080b14;--card:#111827;--card2:#172033;--text:#f8fafc;--muted:#94a3b8;--accent:#7c3aed;--accent2:#2563eb}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,Arial;background:radial-gradient(circle at top,#18213d 0,#080b14 45%);color:var(--text)}
+header{position:sticky;top:0;z-index:5;backdrop-filter:blur(15px);background:#080b14cc;border-bottom:1px solid #ffffff12}
+nav{max-width:1100px;margin:auto;padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:24px;font-weight:800}.logo span{color:#8b5cf6}
+nav a{color:#cbd5e1;text-decoration:none;margin-left:18px;font-size:14px}
+.hero{max-width:1100px;margin:70px auto 35px;padding:0 20px;text-align:center}
+.hero h1{font-size:clamp(42px,7vw,76px);margin:0 0 12px;letter-spacing:-3px}
+.hero h1 span{background:linear-gradient(90deg,#8b5cf6,#38bdf8);-webkit-background-clip:text;color:transparent}
+.hero p{color:var(--muted);font-size:18px}
+.wrap{max-width:1100px;margin:auto;padding:0 20px 70px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:linear-gradient(145deg,#111827,#0e1422);border:1px solid #ffffff12;border-radius:20px;padding:24px;box-shadow:0 15px 45px #0004}
+.card h2{margin-top:0}.muted{color:var(--muted)}
+input,textarea,button{font:inherit} input,textarea{width:100%;background:#0a0f1b;border:1px solid #ffffff18;color:white;border-radius:12px;padding:13px;outline:none}
+button{border:0;border-radius:12px;padding:12px 16px;color:white;background:linear-gradient(90deg,var(--accent),var(--accent2));font-weight:700;cursor:pointer}
+button:hover{filter:brightness(1.1)} .row{display:flex;gap:10px;margin-top:10px}
+.games{margin-top:20px}.game{margin-top:12px;padding:14px;border-radius:14px;background:#ffffff08}
+#board{display:grid;grid-template-columns:repeat(3,70px);gap:7px;margin:15px auto;width:max-content}
+.cell{width:70px;height:70px;border-radius:12px;background:#1b263b;color:white;font-size:30px;font-weight:800}
+#snake{display:block;background:#05070c;border-radius:12px;margin:12px auto;width:280px;max-width:100%}
+.chat{height:260px;overflow:auto;background:#080d17;border-radius:14px;padding:12px;margin-bottom:10px}
+.msg{padding:9px 12px;border-radius:12px;margin:7px 0;max-width:88%;line-height:1.4}.user{background:#312e81;margin-left:auto}.ai{background:#1e293b}
+footer{text-align:center;color:#64748b;padding:25px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.hero{margin-top:45px}nav a{margin-left:8px}}
+</style>
+</head>
+<body>
+<header><nav><div class="logo">Kaeto<span>Hub</span></div><div>
+<a href="#games">Games</a><a href="#google">Google</a><a href="#ai">AI</a></div></nav></header>
+
+<section class="hero">
+<h1>Your internet.<br><span>Your way.</span></h1>
+<p>Games, Google search, and an AI assistant in one clean homepage.</p>
+</section>
+
+<main class="wrap">
+<div class="grid">
+<section class="card" id="google">
+<h2>🔎 Google</h2><p class="muted">Search the web without leaving the hub.</p>
+<form id="searchForm" class="row">
+<input id="search" placeholder="Search Google..." autocomplete="off">
+<button>Search</button>
+</form>
+</section>
+
+<section class="card" id="ai">
+<h2>🤖 AI Assistant</h2>
+<p class="muted">Ask the built-in mini assistant anything.</p>
+<div class="chat" id="chat"><div class="msg ai">Yo 👋 I'm KaetoHub AI. Ask me something.</div></div>
+<form id="aiForm" class="row"><input id="question" placeholder="Ask AI..." autocomplete="off"><button>Ask</button></form>
+</section>
+
+<section class="card" id="games">
+<h2>🎮 Games</h2>
+<p class="muted">Quick games for when the homework gets suspiciously boring 😂</p>
+<div class="games">
+<div class="game"><b>Tic-Tac-Toe</b><div id="board"></div><button onclick="resetTTT()">New Game</button><p id="status" class="muted"></p></div>
+<div class="game"><b>Click Rush</b><p>Clicks: <span id="score">0</span></p><button onclick="clickRush()">CLICK!</button></div>
+<div class="game"><b>Snake</b><canvas id="snake" width="280" height="280"></canvas><p class="muted">Use arrow keys. Press Start.</p><button onclick="startSnake()">Start Snake</button></div>
+</div>
+</section>
+</div>
+</main>
+<footer>KaetoHub • Games • Google • AI<br><span>Public hosting + Google indexing can be enabled after deployment.</span></footer>
+
+<script>
+// Google
+document.getElementById('searchForm').onsubmit=e=>{
+ e.preventDefault(); let q=document.getElementById('search').value.trim();
+ if(q) location.href='https://www.google.com/search?q='+encodeURIComponent(q);
+};
+
+// Local AI demo — replace the reply function with your own secure AI backend/API.
+const chat=document.getElementById('chat');
+document.getElementById('aiForm').onsubmit=e=>{
+ e.preventDefault(); let q=document.getElementById('question').value.trim(); if(!q)return;
+ chat.innerHTML+=`<div class="msg user">${escapeHtml(q)}</div>`;
+ let a=localAI(q);
+ setTimeout(()=>{chat.innerHTML+=`<div class="msg ai">${escapeHtml(a)}</div>`;chat.scrollTop=chat.scrollHeight},250);
+ document.getElementById('question').value='';
+};
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function localAI(q){
+ q=q.toLowerCase();
+ if(q.includes('hello')||q.includes('hi')) return 'Hey! What are we working on?';
+ if(q.includes('math')) return 'Send me the math problem and I can walk through it step by step.';
+ if(q.includes('game')) return 'Try Tic-Tac-Toe, Click Rush, or Snake on this page.';
+ if(q.includes('who are you')) return "I'm the demo AI built into KaetoHub.";
+ return "I’m the starter AI right now. To make me a real AI assistant, connect this box to a secure AI backend/API.";
+}
+
+// Tic Tac Toe
+let board=Array(9).fill(''), turn='X', over=false;
+function drawBoard(){let b=document.getElementById('board');b.innerHTML='';board.forEach((v,i)=>{let x=document.createElement('button');x.className='cell';x.textContent=v;x.onclick=()=>move(i);b.appendChild(x)});document.getElementById('status').textContent=over?'Game over — start a new game.':turn+"'s turn";}
+function move(i){if(board[i]||over)return;board[i]=turn;if(win(turn)){over=true}else turn=turn==='X'?'O':'X';drawBoard()}
+function win(p){return [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]].some(a=>a.every(i=>board[i]===p))}
+function resetTTT(){board=Array(9).fill('');turn='X';over=false;drawBoard()} resetTTT();
+
+// Click Rush
+let score=0; function clickRush(){score++;document.getElementById('score').textContent=score}
+
+// Snake
+const c=document.getElementById('snake'),ctx=c.getContext('2d');let snake,food,dir,loop;
+function startSnake(){clearInterval(loop);snake=[{x:140,y:140}];dir={x:20,y:0};food={x:Math.floor(Math.random()*14)*20,y:Math.floor(Math.random()*14)*20};loop=setInterval(step,110)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowUp'&&dir.y===0)dir={x:0,y:-20};if(e.key==='ArrowDown'&&dir.y===0)dir={x:0,y:20};if(e.key==='ArrowLeft'&&dir.x===0)dir={x:-20,y:0};if(e.key==='ArrowRight'&&dir.x===0)dir={x:20,y:0}});
+function step(){ctx.clearRect(0,0,280,280);let h={x:snake[0].x+dir.x,y:snake[0].y+dir.y};if(h.x<0||h.y<0||h.x>=280||h.y>=280||snake.some(s=>s.x===h.x&&s.y===h.y)){clearInterval(loop);return}snake.unshift(h);if(h.x===food.x&&h.y===food.y)food={x:Math.floor(Math.random()*14)*20,y:Math.floor(Math.random()*14)*20};else snake.pop();ctx.fillStyle='#8b5cf6';snake.forEach(s=>ctx.fillRect(s.x+1,s.y+1,18,18));ctx.fillStyle='#38bdf8';ctx.fillRect(food.x+2,food.y+2,16,16)}
+</script>
+</body>
+</html>
